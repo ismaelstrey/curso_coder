@@ -25,7 +25,7 @@ module.exports = app => {
         const changeArticles = !lastStat || stat.articles !== lastStat.articles
 
         if(changeUsers || changeCategories || changeArticles){
-            stat.save().then(() => console.log('[Stats] Estatisticas Atualizadas'))
+            stat.save().then(() => console.log('\x1b[34m','[Stats] Estatisticas Atualizadas', "\x1b[0m"))
         }
     })
 }

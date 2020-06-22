@@ -15,6 +15,9 @@ module.exports = app => {
         if(!req.originalUrl.startsWith('/users')) user.admin = false
         if(!req.user || !req.user.admin) user.admin = false
 
+        if(!req.originalUrl.startsWith('/users')) user.admin = false
+        if(!req.user || !req.user.admin) user.admin = false
+
         try {
             existsOrError(user.name, 'Nome não informado')
             existsOrError(user.email, 'E-mail não informado')
@@ -53,6 +56,7 @@ module.exports = app => {
     const get = (req, res) => {
         app.db('users')
             .select('id', 'name', 'email', 'admin')
+            .whereNull('deletedAt')
             .then(users => res.json(users))
             .catch(err => res.status(500).send(err))
     }
@@ -75,13 +79,15 @@ module.exports = app => {
             const rowsUpdated = await app.db('users')
                 .update({deletedAt: new Date()})
                 .where({ id: req.params.id })
-            existsOrError(rowsUpdated, 'Usuário não foi encontrado.')
+            existsOrError(rowsUpdated, 'Usuário não foi encontrado!.')
 
             res.status(204).send()
         } catch(msg) {
             res.status(400).send(msg)
         }
     }
+
+   
 
     return { save, get, getById, remove }
 }
